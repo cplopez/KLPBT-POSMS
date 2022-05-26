@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('price_solo', 10,2);
             $table->date('date_expiry');
             $table->integer('badorder');
+            $table->integer('product_id');
             $table->timestamps();
         });
     }

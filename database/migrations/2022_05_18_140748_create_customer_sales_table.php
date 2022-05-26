@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('bankname');
             $table->double('discount');
             $table->double('check_amount',10,2);
-            $table->integer('status_id');
+            $table->double('total_quantity', 10, 2);
+            $table->double('total_cash', 10, 2);
             $table->timestamps();
         });
     }
