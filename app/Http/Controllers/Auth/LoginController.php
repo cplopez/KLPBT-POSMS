@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 use Illuminate\Http\Request;
 class LoginController extends Controller
 
@@ -49,11 +52,17 @@ class LoginController extends Controller
         ]);
 
         if(auth()->attempt(array('email'=>$input['email'],'password'=>$input['password']))){
-                if(auth()->user()->is_admin ==1){
-                 return redirect()->route('admin.home');
-        }else{
-                return redirect('home');
-        }
+            if (auth()->user()->status == 0) {
+                Session::flush();
+                Auth::logout();
+                return redirect()->route('login')->with('error','Input proper email or password.');
+            }
+            if(auth()->user()->is_admin ==1){
+            //  return redirect()->route('admin.home');
+                return redirect('dashboard');
+            }else{
+                    return redirect('purchase');
+            }
         }else{
                 return redirect()->route('login')->with('error','Input proper email or password.');
         }

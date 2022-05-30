@@ -13,6 +13,8 @@ class Customer extends Model
     public $primaryKey = 'id';
     public $timestamps = true;
 
+    protected $guarded = [];
+    
     public function customer_sales() {
         return $this->hasMany('App\Models\CustomerSale');
     }

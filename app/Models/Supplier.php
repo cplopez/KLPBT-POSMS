@@ -24,4 +24,7 @@ class Supplier extends Model
         return $this->hasMany('App\Models\Inventory');
     }
 
+    public function deliveries() {
+        return $this->hasMany('App\Models\Delivery');
+    }
 }

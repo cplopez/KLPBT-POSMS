@@ -65,6 +65,28 @@
                                     </h4>
                                 </div>
                                 <div class="card-body">
+                                    <form action="/customer_sales" method="GET">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                <label>Date Start</label>
+                                                    <input type="date" class="form-control"
+                                                    value="{{ $request->date_start ?? '' }}"
+                                                    placeholder="Date Start" name="date_start">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>Date End</label>
+                                                    <input type="date" class="form-control" 
+                                                    value="{{ $request->date_end ?? '' }}"
+                                                    placeholder="Date Start" name="date_end">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-md btn-primary">Filter</button>
+                                        <!-- <button type="button" id="export" class="btn btn-md btn-primary">Export</button> -->
+                                    </form>
                                     <div class="table-responsive">
                                         <table id="userTable" class="table">
                                             <thead>
@@ -73,14 +95,14 @@
                                                 <th>Customer Name</th>
                                                 <th>Mode of Payment</th>
                                                 <th>Amount Due</th>
-                                                <th>Check No.</th>
+                                                <!-- <th>Check No.</th>
                                                 <th>Check Date</th>
-                                                <th>Bank Name</th>
+                                                <th>Bank Name</th> -->
                                                 <th>Discount</th>
-                                                <th>Check Amount</th>
+                                                <!-- <th>Check Amount</th> -->
                                                 <th>Total Quantity</th>
                                                 <th>Total Cash</th> 
-                                                <th colspan="2"><center>Actions</center></th>
+                                                <!-- <th colspan="2"><center>Actions</center></th> -->
                                             </thead>
                                             <tbody> 
                                                 @foreach ($customerSale as $customer_sale)
@@ -88,20 +110,20 @@
                                                         <td>{{$customer_sale->customer->name}}</td>
                                                         <td>{{$customer_sale->m_o_p->mode}}</td>
                                                         <td>{{$customer_sale->amount}}</td>
-                                                        <td>{{$customer_sale->check_num}}</td>
+                                                        <!-- <td>{{$customer_sale->check_num}}</td>
                                                         <td>{{$customer_sale->check_date}}</td>
-                                                        <td>{{$customer_sale->bankname}}</td>
+                                                        <td>{{$customer_sale->bankname}}</td> -->
                                                         <td>{{$customer_sale->discount}}</td>
-                                                        <td>{{$customer_sale->check_amount}}</td>
+                                                        <!-- <td>{{$customer_sale->check_amount}}</td> -->
                                                         <td>{{$customer_sale->total_quantity}}</td>
                                                         <td>{{$customer_sale->total_cash}}</td>
-                                                        <td class="align-middle">
+                                                        {{-- <td class="align-middle">
                                                             <a href="/customer_sales/{{$customer_sale->id}}"
                                                                 class="btn btn-primary mx-2" data-toggle="tooltip"
                                                                 data-original-title="Edit user">
                                                                 View
                                                             </a>
-                                                        </td>
+                                                        </td> --}}
                                                         {{-- <td class="align-middle">
                                                             <a href="/customer_sales/{{$customer_sale->id}}/edit"
                                                                 class="btn btn-primary mx-2" data-toggle="tooltip"
@@ -125,6 +147,21 @@
             <!-- .animated -->
         </div><!-- .content -->
         <!--/.col-->
+        <script>
+            $("#export").click(function() {
+                    var divToPrint=document.getElementById('userTable');
+
+                    var newWin=window.open('','Print-Window');
+
+                    newWin.document.open();
+
+                    newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+                    newWin.document.close();
+
+                    setTimeout(function(){newWin.close();},10);
+            })
+        </script>
         <!-- Modal HTML -->
         {{-- <div id="myModal" class="modal fade" tabindex="-1">
             <div class="modal-dialog">

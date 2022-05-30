@@ -7,6 +7,7 @@ use App\Models\Beverage;
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Delivery;
 
 class BeveragesListsController extends Controller
 {
@@ -32,12 +33,30 @@ class BeveragesListsController extends Controller
         
         $beverages = Beverage::all();
         $suppliers = Supplier::all(); 
-        $products = Product::select('beverage_name')->distinct()->get();
 
-        $category = Category::all();
+        $categories = Category::all();
+        // $deliveries = Delivery::whereDate('date_expire', '>=', now())->get();
+        $deliveries = Delivery::all();
 
-        return view('beverages.index')->with('beverages', $beverages)->with('suppliers', $suppliers)
-       ->with('category',$category)->with('products', $products);
+        //get products from delivery
+        $products = [];
+        foreach ($deliveries as $delivery) {
+            if (!isset($products[$delivery->product->beverage_name])) {
+                $products[$delivery->product->beverage_name] = [];
+            }
+            if (!isset($products[$delivery->product->beverage_name][$delivery->category->cat_name])) {
+                $products[$delivery->product->beverage_name][$delivery->category->cat_name] = [
+                    'id' => $delivery->product->id,
+                    'quantity' => 0,
+                    'price_case' => $delivery->product->price_case,
+                    'price_solo' => $delivery->product->price_solo
+                ];
+            }
+            $products[$delivery->product->beverage_name][$delivery->category->cat_name]['quantity'] += $delivery->quantity;
+        }
+        
+        return view('beverages.index')->with('suppliers', $suppliers)
+       ->with('category',$categories)->with('products', $products);
 
     }
 
@@ -67,7 +86,8 @@ class BeveragesListsController extends Controller
             'price_solo' => 'required',
             'category_id' => 'required',
             'date_expiry' => 'required',
-            'badorder' => 'required']);
+            'badorder' => 'required'
+        ]);
  
             
 

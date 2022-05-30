@@ -11,7 +11,7 @@ class CustomerSale extends Model
     protected $table = 'customer_sales';
     public $primaryKey = 'id';
     public $timestamps = true;
-
+    protected $guarded = [];
     public function customer() {
         return $this->belongsTo('App\Models\Customer');
     }

@@ -11,6 +11,8 @@ use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\CustomerSale;
+use App\Models\Delivery;
 
 class InventoryController extends Controller
 {
@@ -42,10 +44,38 @@ class InventoryController extends Controller
         // $orderNumber = $getOrderRecentOrderNumber[0]->order_number + 1;
 
         $inventories = Inventory::all();
+        $all_products = Product::all();
 
-       
+       $customer_sales = CustomerSale::all();
+        $order_ids = $customer_sales->pluck('order_id');
+        
+        $purchases = Purchase::whereIn('order_id', $order_ids)->get();
+        
+        $categories = Category::all();
+        $deliveries = Delivery::all();
 
-        return view('inventories.index')->with('inventories', $inventories);
+        //initialized
+        foreach ($all_products as $product) {
+            $products[$product->beverage_name] = [];
+            foreach ($categories as $category) {
+                $products[$product->beverage_name][$category->cat_name] = [
+                    'id' => $product->id,
+                    'quantity' => 0,
+                    'price_case' => $product->price_case,
+                    'price_solo' => $product->price_solo
+                ];
+            }
+        }
+        foreach ($deliveries as $delivery) {
+            $products[$delivery->product->beverage_name][$delivery->category->cat_name]['quantity'] += $delivery->quantity;
+        }
+        
+        //remove some quantity from purchase
+        foreach ($purchases as $purchase) {
+            $products[$purchase->product->beverage_name][$purchase->category->cat_name]['quantity'] -= $purchase->quantity;
+        }
+        
+        return view('inventories.index')->with('inventories', $inventories)->with('products', $products)->with('categories',$categories);
     }
 
     /**

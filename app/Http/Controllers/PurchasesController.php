@@ -60,32 +60,41 @@ class PurchasesController extends Controller
 
         
         $this->validate($request, [
-            'beverage' => 'required',
-            'category' => 'required',
-            'case' =>'required'
+            'product_id' => 'required',
+            'category_id' => 'required',
+            /* 'mop_id' => 'required',
+            'customer_id' => 'required', */
+            'quantity' =>'required'
         ]);
 
-
-        $beverage = Beverage::find($request->input('beverage'));
-        $total =  $beverage->product->price_case * $request->input('case');
-
-        $purchases = new Purchase;
-
-        $purchases->order_id = 0;
-        $purchases->beverage_id = $request->input('beverage');
-        $purchases->quantity = $request->input('case');
-        $purchases->category_id = $request->input('category');
+        if (!isset($request->order_number) && $request->order_number == '') {
+            $order = Order::create([
+                'order_number' => rand(10, 40)
+            ]);
+        } else {
+            $order = Order::find($request->order_number);
+        }
         
-        $current_date = date('Y-m-d H:i:s');
-        $purchases->date_purchase = $current_date;
-        $purchases->total = $total;
-        $purchases->save();
+        $request->merge(['order_id' => $order->id]);
 
-        $result = Beverage::find((int)$request->input('beverage'));
+        $product = Product::find($request->product_id);
+        $purchase = Purchase::create([
+            'order_id' => $order->id,
+            'product_id' => request('product_id'),
+            'category_id' => request('category_id'),
+            /* 'mop_id' => request('mop_id'),
+            'customer_id' => request('customer_id'), */
+            'quantity' =>request('quantity'),
+            'total' =>request('quantity') * $product->price_case,
+            // 'date_purchase' => now()
+        ]);
+        /* $purchases = Purchase::where(['order_id', $order->id])->get();
+
+        $total =  $purchase->sum('total'); */
         
         // return 
 
-        $quantity =  $result->product->total_quantity - (int)$request->input('case');
+        /* $quantity =  $result->product->total_quantity - (int)$request->input('case');
 
         $inventory = new Inventory;
         $inventory->supplier_id = $result->supplier_id;
@@ -97,16 +106,9 @@ class PurchasesController extends Controller
         $inventory->price_solo = $result->product->price_solo;
         $inventory->date_expiry = $result->product->date_expire;
         $inventory->badorder = $result->product->badorder;
-        $inventory->save();
-
-        
-        $product = Product::find($result->product->id);
-        $product->total_quantity = $quantity;
-        $product->save();
-
-        
-
-        return redirect('/purchase')->with('success', 'Inserted Successfully');
+        $inventory->save(); */
+  
+        return redirect('/purchase?order_number='.$order->id.'&customer_id='.request('customer_id'))->with('success', 'Inserted Successfully');
     }
 
     /**
@@ -151,6 +153,9 @@ class PurchasesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $purchase = Purchase::find($id);
+        $purchase->delete();
+
+        return redirect()->back();
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Beverage;
 use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\Order;
+use App\Models\Product;
 
 
 class SalesInvoicesController extends Controller
@@ -33,25 +34,42 @@ class SalesInvoicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     { 
        
-
-        $customers = Customer::all();
-        $mops = MOP::all();
-        $beverages = Beverage::all();
-        $categories = Category::all();
-        $purchases = Purchase::orderByDesc("id")->get();
-        $orderID = Order::all();
-
-
-        $totals = 0;
-        foreach($purchases as $purchase) {
-            $totals += $purchase->total;
+        if (isset($request->customer) || $request->customer != '') {
+            $customers = Customer::where('name', 'like', "%".$request->customer."%")->get();
+        } else {
+            $customers = Customer::all();
+        }
+        
+        if (isset($request->beverage) || $request->beverage != '') {
+            $products = Product::where('beverage_name', 'like', "%".$request->beverage."%")->get();
+        } else {
+            $products = Product::all();
         }
 
-        return view('invoices.index')->with('customers', $customers)->with('m_o_p_s', $mops)->with('beverages',$beverages)->with('categories', $categories)
-        ->with('purchases',$purchases)->with('totals', $totals);
+        $mops = MOP::all();
+        $categories = Category::all();
+
+        if (isset($request->order_number) || $request->order_number != '') {
+            $order = Order::find($request->order_number);
+            // $order = Order::where(['order_number' => $request->order_number ?? ''])->first();
+            $order_number = $order->id;
+        } else {
+            $order_number = 0;
+        }
+        
+        $purchases = Purchase::where(['order_id' => $order_number])->orderByDesc("id")->get();
+
+        /* $totals = 0;
+        foreach($purchases as $purchase) {
+            $totals += $purchase->total;
+        } */
+        
+        $totals = $purchases->sum('total');
+        return view('invoices.index')->with('customers', $customers)->with('m_o_p_s', $mops)->with('categories', $categories)
+        ->with('purchases',$purchases)->with('totals', $totals)->with('products', $products)->with('request', $request);
 
     }
 

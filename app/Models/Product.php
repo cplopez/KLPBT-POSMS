@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'category_id'
-    ];
+    protected $guarded = [];
     protected $table = 'products';
     public $primaryKey = 'id';
     public $timestamps = true;
@@ -30,5 +28,9 @@ class Product extends Model
     }
       public function inventories() {
         return $this->hasMany('App\Models\Inventory');
+    }
+
+    public function deliveries() {
+        return $this->hasMany('App\Models\Delivery');
     }
 }

@@ -13,6 +13,8 @@ class Purchase extends Model
     public $primaryKey = 'id';
     public $timestamps = true;
 
+    protected $guarded = [];
+    
     public function beverage() {
         return $this->belongsTo('App\Models\Beverage');
     }
@@ -28,6 +30,10 @@ class Purchase extends Model
         return $this->belongsTo('App\Models\Category');
     }
     public function product() {
-        return $this->hasMany('App\Models\Product');
+        return $this->belongsTo('App\Models\Product');
+    }
+
+    public function order() {
+        return $this->belongsTo('App\Models\Order');
     }
 }

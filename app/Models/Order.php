@@ -13,6 +13,8 @@ class Order extends Model
     public $primaryKey = 'id';
     public $timestamps = true;
 
+    protected $guarded = [];
+
     public function supplier() {
         return $this->belongsTo('App\Models\Supplier');
     }
@@ -22,7 +24,7 @@ class Order extends Model
     public function category() {
         return $this->belongsTo('App\Models\Category');
     }
-    public function order() {
-        return $this->belongsTo('App\Models\Order');
+    public function purchase() {
+        return $this->hasMany('App\Models\Purchase');
     }
 }

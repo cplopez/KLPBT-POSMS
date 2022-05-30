@@ -68,7 +68,7 @@
                                             <th>Beverages Information</th>
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    @if (count($inventories) > 0)
+                                                    @if (count($products) > 0)
                                                         <table class="table table-bordered data-table">
                                                             <thead>
                                                                 <tr>
@@ -76,25 +76,24 @@
                                                                     <th>Product Name</th>
                                                                     <th>Category Name</th>
                                                                     <th>Quantity </th>
-                                                                    <th>Price per Case </th>
-                                                                    <th>Price per Solo </th>
-                                                                    <th>Date of Expiry</th>
-                                                                    <th>Bad Order</th>
 
                                                             </thead>
                                                             <tbody>
-                                                                @foreach ($inventories as $inventory)
-                                                                    <tr>
-                                                                        <td>{{ $inventory->id }}</td>
-                                                                        <td>{{ $inventory->product->beverage_name }}</td>
-                                                                        <td>{{ $inventory->category->cat_name }}</td>
-                                                                        <td>{{ $inventory->product->total_quantity }}</td>
-                                                                        <td>{{ $inventory->product->price_case }}</td>
-                                                                        <td>{{ $inventory->product->price_solo }}</td>
-                                                                        <td>{{ $inventory->product->date_expire }}</td>
-                                                                        <td>{{ $inventory->product->badorder }}</td>
-
-                                                                    </tr>
+                                                                <?php
+                                                                    $i = 1;
+                                                                ?>
+                                                                @foreach ($products as $beverage_name => $product)
+                                                                    @foreach($product as $category_name =>  $beverage)
+                                                                        <tr>
+                                                                            <td>{{ $i }}</td>
+                                                                            <td>{{ $beverage_name }}</td>
+                                                                            <td>{{ $category_name }}</td>
+                                                                            <td>{{ $beverage['quantity'] }}</td>
+                                                                        </tr>
+                                                                        <?php
+                                                                            $i++;
+                                                                        ?>
+                                                                    @endforeach
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
