@@ -3,12 +3,12 @@
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand" href="/">
       {{-- <img src="../assets/img/logo-ct.png" class="navbar-brand-img  max-height-vh-50 " alt="main_logo"> --}}
-      <img src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t1.15752-9/281348609_384164603740310_5539576653170708696_n.png?_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeF32VDErSriuurRbdeO2l-UaCmnHsEorkhoKacewSiuSLtqZN1-WFrCvg4JIpSLdjmucboGbxB7Iz6m4ouyvM8W&_nc_ohc=WLuU44X-SkAAX-TGHbZ&tn=fp5hTjNkAOGU64kr&_nc_ht=scontent.fmnl4-1.fna&oh=03_AVLwSgvS-zWcpnASMXKGqxdRrHOvfaRs-0mtD-Av4UQF5Q&oe=62BD8765" class="navbar-brand-img  max-height-vh-50 " alt="main_logo">
+      <img src="https://scontent.fmnl4-6.fna.fbcdn.net/v/t1.15752-9/281905701_331392449142058_8042505719761818952_n.png?_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHiJV59WIH80g3jlBRcBs4XGjCqqIPBP-waMKqog8E_7HFH-La5gzyu8QSlQkz2i--kQqPVv6tBvEIaQzhMak00&_nc_ohc=ybBlpOA_1vkAX8XUAeh&_nc_ht=scontent.fmnl4-6.fna&oh=03_AVKR8mPEU82PD_raRn-evoA-YnR12VgZdsYWh-zxACFz5Q&oe=62BAC043" class="navbar-brand-img  max-height-vh-50 " alt="main_logo">
     </a>
   </div>
 </div>
 
-  <hr class="horizontal dark mt-0">
+  <hr class="horizontal dark">
   <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
     <ul class="navbar-nav">
       @if(Auth::user()->is_admin == 1)
@@ -57,7 +57,7 @@
       </li>
       @if(Auth::user()->is_admin == 1)
       <li class="nav-item">
-        <a class="nav-link  {{ Request::is('deliviries') ? 'active' : ''}}" href="/deliveries">
+        <a class="nav-link  {{ Request::is('deliveries') ? 'active' : ''}}" href="/deliveries">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
           <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <title>box-3d-50</title>
@@ -140,7 +140,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link  {{ Request::is('beverages') ? 'active' : ''}}" href="/beverages_list">
+        <a class="nav-link  {{ Request::is('beverages_list') ? 'active' : ''}}" href="/beverages_list">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <title>settings</title>

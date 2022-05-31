@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-setlocale(LC_MONETARY, "en_PHP");
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance

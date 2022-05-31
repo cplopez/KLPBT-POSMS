@@ -13,6 +13,8 @@ use App\Models\CustomerSale;
 use App\Models\Payable;
 use App\Models\Delivery;
 use App\Models\User;
+use App\Models\Inventory;
+
 class DashboardController extends Controller
 {
     /**
@@ -42,9 +44,13 @@ class DashboardController extends Controller
         $sales = CustomerSale::all();
         $payables = Payable::all();
         $users = User::all();
-        $deliveries = Delivery::all();
+        $deliveries = Delivery::orderBy('id', 'desc')->take(3)->get();
+        $inventories = Inventory::orderBy('id', 'desc')->take(3)->get();
+        $inventories = Inventory::orderBy('id', 'desc')->take(3)->get();
+        $customerSale = CustomerSale::orderBy('id', 'desc')->take(3)->get();
 
-        return view("dashboards.dashboard")->with('suppliers', $supplier)->with('invoices', $purchased)->with('beverages', $beverages)->with('categories', $categories)->with('customers', $customers)->with('payables', $payables)->with('m_o_p_s', $m_o_p_s)->with('sales', $sales)->with('users', $users)->with('deliveries', $deliveries);
+        return view("dashboards.dashboard")->with('suppliers', $supplier)->with('invoices', $purchased)->with('beverages', $beverages)->with('categories', $categories)->with('customers', $customers)->with('payables', $payables)->with('m_o_p_s', $m_o_p_s)->with('sales', $sales)->with('users', $users)->with('deliveries', $deliveries)
+        ->with('inventories', $inventories)->with('customerSale', $customerSale);
     }
 
     /**
