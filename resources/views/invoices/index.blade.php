@@ -205,7 +205,7 @@
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Change</label>
-                                            <input type="number" oninput="calcChange()" id="change" name="change" style="width: 200px;">
+                                            <input type="text" oninput="calcChange()" id="change" name="change" style="width: 200px;">
                                         </div>
                                 </div>
                                 <div class="col-12">
