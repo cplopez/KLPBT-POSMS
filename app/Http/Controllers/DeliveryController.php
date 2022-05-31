@@ -178,13 +178,14 @@ class DeliveryController extends Controller
         $results[] = ['Deliveries', 'Date From', 'Date To', 'Total Delivery', 'Total Cost'];
         // $results[] = ['Deliveries', 'Date From', 'Date To', 'Key Search'];
         $results[] = [' ', ($request->date_start ?? '-'), ($request->date_end ?? '_'), $deliveries->count(), $deliveries->sum('price')];
-        $results[] = ['OR Number', 'Beverage Name', 'Supplier', 'Quantity', 'Price', 'Category', 'Date Added', 'Expiry Date'];
+        $results[] = ['OR Number', 'Beverage Name', 'Supplier', 'Quantity', 'Quantity Left', 'Price', 'Category', 'Date Added', 'Expiry Date'];
         foreach ($deliveries as $delivery) {
             $results[] = [
                 $delivery->or_number,
                 $delivery->product->beverage_name,
                 $delivery->supplier->name,
                 $delivery->quantity,
+                $delivery->new_quantity,
                 $delivery->price,
                 $delivery->product->category->cat_name,
                 $delivery->created_at,
@@ -192,6 +193,6 @@ class DeliveryController extends Controller
             ];
         }
 
-        return Excel::download(ExlExport::new($results), "Deliveries-" . ($request->date_start ?? '-').'to'.($request->date_end ?? '_') . '.xlsx');
+        return Excel::download(ExlExport::new($results), "Deliveries-" . ($request->date_start ?? '_').'to'.($request->date_end ?? '_') . '.xlsx');
     }
 }

@@ -59,20 +59,26 @@
                     {!! Form::open(['action' => 'PurchasesController@store', 'method' => 'POST']) !!}
                         <div class="row">    
                             <div class="col-12 row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="form-group">
                                         <label>Beverage Name</label>
-                                        <select name="product_id" class="custom-select form-control">
+                                        <select name="product_id" class="custom-select form-control" id="product">
                                             <option value="">Select Beverage</option>
                                             @foreach ($products as $product)
-                                                <option value="{{ $product->id }}">
+                                                <option value="{{ $product->id }}" quantity="{{$product->total_quantity}}">
                                                     {{ $product->beverage_name.' ['.$product->category->cat_name.']' }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label>Quantity (Cases) Left</label>
+                                        <input readonly type="number" id="quantity_left" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-4">
                                     <div class="form-group">
                                         <label>Quantity (Cases)</label>
                                         <input type="number" name="quantity" class="form-control">
@@ -187,10 +193,10 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Change</label>
-                                            <input type="text" oninput="calcChange()" id="change" name="change" class="form-control">
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Change</label>
+                                        <input type="text" readonly oninput="calcChange()" id="change" name="change" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="col-12">
                                     <button  class="btn btn-primary">Proceed</button>
@@ -251,5 +257,13 @@
             var amount = document.getElementById("discountedAmount").value;
             document.getElementById("change").value = parseInt(cash) - amount;
         }
+        var products = <?= $products ?>;
+        
+        $('#product').on('change', function(e){
+            var pid = $("#product option").filter(":selected").val();
+            
+            var product = products.find(p=>p.id == pid);
+            document.getElementById("quantity_left").value = product.total_quantity;
+        });
     </script>
 @endsection
