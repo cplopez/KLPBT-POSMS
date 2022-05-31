@@ -1,36 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
-        <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-        <title tyle="color:red;font-size:60px;">
-            KLP POS Monitoring System
-        </title>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-        <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
-        <!--     Fonts and icons     -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-        <!-- Nucleo Icons -->
-        <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
-        <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
-        <!-- Font Awesome Icons -->
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-        <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
-        <!-- CSS Files -->
-        <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css?v=1.0.3') }}" rel="stylesheet" />
-    </head>
-
     <div id="right-panel" class="right-panel">
 
         <!-- Header-->
@@ -62,38 +32,60 @@
                                 </h3>
                             </div>
                             <div class="card-body">
+                                <form action="/inventories" method="GET">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                            <label>Date Start</label>
+                                                <input type="date" class="form-control"
+                                                value="{{ $request->date_start ?? '' }}"
+                                                placeholder="Date Start" name="date_start">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Date End</label>
+                                                <input type="date" class="form-control" 
+                                                value="{{ $request->date_end ?? '' }}"
+                                                 placeholder="Date Start" name="date_end">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-md btn-primary">Filter</button>
+                                    <a type="button" href="{{route('inventory.export', [
+                                        'date_end' => $request->date_end ?? '',
+                                        'date_start' => $request->date_start ?? '',
+                                        'inventory_ids' => json_encode($inventory_ids)
+                                        ])}}" 
+                                        target="_blank" class="btn btn-md btn-primary">Export</a>
+                                </form>
                                 <div class="table-responsive">
                                     <table id="userTable" class="table">
                                         <thead>
                                             <th>Beverages Information</th>
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    @if (count($products) > 0)
+                                                    @if (count($inventories) > 0)
                                                         <table class="table table-bordered data-table">
                                                             <thead>
                                                                 <tr>
                                                                     <th>No</th>
                                                                     <th>Product Name</th>
                                                                     <th>Category Name</th>
-                                                                    <th>Quantity </th>
-
+                                                                    <th>Old Quantity </th>
+                                                                    <th>New Quantity </th>
+                                                                    <th>Date</th>
                                                             </thead>
                                                             <tbody>
-                                                                <?php
-                                                                    $i = 1;
-                                                                ?>
-                                                                @foreach ($products as $beverage_name => $product)
-                                                                    @foreach($product as $category_name =>  $beverage)
-                                                                        <tr>
-                                                                            <td>{{ $i }}</td>
-                                                                            <td>{{ $beverage_name }}</td>
-                                                                            <td>{{ $category_name }}</td>
-                                                                            <td>{{ $beverage['quantity'] }}</td>
-                                                                        </tr>
-                                                                        <?php
-                                                                            $i++;
-                                                                        ?>
-                                                                    @endforeach
+                                                                @foreach($inventories as $i => $inventory)
+                                                                    <tr>
+                                                                        <td>{{ $i + 1 }}</td>
+                                                                        <td>{{ $inventory->product->beverage_name }}</td>
+                                                                        <td>{{ $inventory->product->category->cat_name}}</td>
+                                                                        <td>{{ $inventory->old_quantity}}</td>
+                                                                        <td>{{ $inventory->new_quantity}}</td>
+                                                                        <td>{{ $inventory->created_at}}</td>
+                                                                    </tr>
                                                                 @endforeach
                                                             </tbody>
                                                         </table>

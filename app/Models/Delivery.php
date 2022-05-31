@@ -15,10 +15,6 @@ class Delivery extends Model
         return $this->belongsTo('App\Models\Product');
     }
 
-    public function category() {
-        return $this->belongsTo('App\Models\Category');
-    }
-
     public function supplier() {
         return $this->belongsTo('App\Models\Supplier');
     }

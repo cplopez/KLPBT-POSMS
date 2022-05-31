@@ -7,7 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CustomerSale;
 use App\Models\Purchase;
+use App\Models\Inventory;
+use Carbon\Carbon;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExlExport;
 
 class CustomerSalesController extends Controller
 {
@@ -31,11 +35,12 @@ class CustomerSalesController extends Controller
     {
 
         if ((isset($request->date_start) && $request->date_start != '') && (isset($request->date_end) && $request->date_end != '')) {
-            $customerSale = CustomerSale::whereBetween('created_at', [$request->date_start, $request->date_end])->get();
+            $date_end = new Carbon($request->date_end);
+            $customerSale = CustomerSale::whereBetween('created_at', [$request->date_start, $date_end->addDays(1)])->get();
         } else {
             $customerSale = CustomerSale::all();
         }
-        return view('customersales.index')->with('customerSale', $customerSale)->with('request', $request);
+        return view('customersales.index')->with('customerSale', $customerSale)->with('request', $request)->with(['sales_ids' => $customerSale->pluck('id')]);
     }
 
     /**
@@ -57,7 +62,7 @@ class CustomerSalesController extends Controller
     public function store(Request $request)
     {
 
-        $purchases = Purchase::where(['order_id' => $request->order_number])->get();
+        
         $this->validate($request, [
             'customer_id' => 'required',
             'mop_id' => 'required',
@@ -68,6 +73,11 @@ class CustomerSalesController extends Controller
             'change' => 'required'
         ]); 
 
+        if (request('change') < 0) {
+            return back()->with('error', 'Not Enough Cash');
+        }
+
+        $purchases = Purchase::where(['order_id' => $request->order_number])->get();
         $customer_sales = CustomerSale::create([
             'customer_id' => request('customer_id'),
             'order_id' => $request->order_number,
@@ -82,6 +92,26 @@ class CustomerSalesController extends Controller
             'total_quantity' => count($purchases),
         ]);
 
+        foreach ($purchases as $purchase) {
+            $product = $purchase->product;
+
+            $old_quantity = $product->total_quantity;
+
+            $product->total_quantity -= $purchase->quantity;
+
+            $new_quantity = $product->total_quantity;
+
+            $product->save();
+
+            Inventory::create([
+                'order_id' => $request->order_number,
+                'old_quantity' => $old_quantity,
+                'new_quantity' => $new_quantity,
+                'product_id' => $product->id,
+                'quantity' => $purchase->quantity,
+                'badorder' => 0,
+            ]);
+        }
         /* if($request->input('mop') === 'Cash')
         {
             $this->validate($request, [
@@ -200,5 +230,27 @@ class CustomerSalesController extends Controller
         $customer->delete();
 
         return redirect('/customers')->with('success', 'Deleted Successfully!');
+    }
+
+    public function export(Request $request) {
+
+        $sales = CustomerSale::whereIn('id', json_decode($request->sales_ids))->get();
+        $results = [];
+        $results[] = ['Customer Sales', 'Date From', 'Date To', 'Total Transactions', 'Grand Total Sales'];
+        $results[] = [' ', ($request->date_start ?? '-'), ($request->date_end ?? '_'), $sales->count(),  $sales->sum('total_cash')];
+        $results[] = ['Customer Name', 'Mode of Payment', 'Ammount Due', 'Discount', 'Total Quantity', 'Total Cash', 'Date Sales'];
+        foreach ($sales as $sale) {
+            $results[] = [
+                $sale->customer->name,
+                $sale->m_o_p->mode,
+                $sale->amount,
+                $sale->discount,
+                $sale->total_quantity,
+                $sale->total_cash,
+                $sale->created_at,
+            ];
+        }
+
+        return Excel::download(ExlExport::new($results), "Deliveries-" . ($request->date_start ?? '-').'to'.($request->date_end ?? '_') . '.xlsx');
     }
 }

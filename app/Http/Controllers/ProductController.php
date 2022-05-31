@@ -35,18 +35,29 @@ class ProductController extends Controller
         $suppliers = Supplier::all(); 
 
         $categories = Category::all();
-        $deliveries = Delivery::whereDate('date_expire', '>=', now())->get();
-        $all_products = Product::all();
+        // $deliveries = Delivery::whereDate('date_expire', '>=', now())->get();
+        // $all_products = Product::all();
         //get products from delivery
         $products = [];
         
-        if (isset($request->category) || $request->category != '') {
-            $category = $request->category;
+        if (isset($request->category_id) || $request->category_id != '') {
+            // $category = $request->category;
+            if (isset($request->search) || $request->search != '') {
+                $products = Product::where(['category_id' => $request->category_id])->where('beverage_name', 'like', "%".$request->search."%")->get();
+            } else {
+                $products = Product::where(['category_id' => $request->category_id])->get();
+            }
+            
         } else {
-            $category = $categories[0]->cat_name;
+            // $category = $categories[0]->cat_name;
+            if (isset($request->search) || $request->search != '') {
+                $products = Product::where('beverage_name', 'like', "%".$request->search."%")->get();
+            } else {
+                $products = Product::all();
+            }
         }
 
-        foreach ($all_products as $product) {
+        /* foreach ($all_products as $product) {
             $products[$product->beverage_name] = [];
             $products[$product->beverage_name][$category] = [
                 'id' => $product->id,
@@ -54,14 +65,14 @@ class ProductController extends Controller
                 'price_case' => $product->price_case,
                 'price_solo' => $product->price_solo
             ];
-        }
-        foreach ($deliveries as $delivery) {
+        } */
+        /* foreach ($deliveries as $delivery) {
             if ($delivery->category->cat_name == $category) {
                 $products[$delivery->product->beverage_name][$category]['quantity'] += $delivery->quantity;
             }
-        }
+        } */
         return view('beverages.index')->with('suppliers', $suppliers)
-       ->with('categories',$categories)->with('products', $products)->with('cat_name', $category);
+       ->with('categories',$categories)->with('products', $products)->with('category_id', $request->category_id)->with('search', $request->search);
 
     }
 
@@ -98,7 +109,7 @@ class ProductController extends Controller
 
         
         $product = Product::updateOrInsert(
-            ['beverage_name' => $request->input('beverage_name')],
+            ['beverage_name' => $request->input('beverage_name'), 'category_id' => $request->input('category_id')],
             [
                 'price_case' => $request->input('price_case'),
                 'new_quantity' => 0,
@@ -175,13 +186,14 @@ class ProductController extends Controller
 
         $products->save(); */
 
-        $this->validate($request, 
-        [
-            'beverage_name'=> 'required'           
+        $this->validate($request, [
+            'beverage_name'=> 'required'       ,
+            'price_case'=> 'required'     
         ]);
         $product = Product::find($id);
         $product->update([
-            'beverage_name' => request('beverage_name')
+            'beverage_name' => request('beverage_name'),
+            'price_case' => request('price_case'),
         ]);
 
         return redirect('/beverages_list')->with('success', 'Updated Successfully');

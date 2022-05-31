@@ -14,6 +14,13 @@
                 </h2>
             </div>
         </div>
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                <ul>
+                    <li>{{ session('error') }}</li>
+                </ul>
+            </div>
+        @endif 
         @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -38,10 +45,10 @@
                     <form action="/purchase" method="GET">
                         <div class="row">
                         <input type="hidden" value="{{ $request->customer ?? ''}}" class="form-control" name="customer"placeholder="" aria-label="" aria-describedby="basic-addon1">
-                            <div class="col-6">
+                            <div class="col-12">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <button type="submit" class="btn btn-outline-secondary">Search Beverage</button>
+                                    <button type="submit" class="mb-0 btn btn-outline-secondary">Search Beverage</button>
                                 </div>
                                 <input type="text" value="{{ $request->beverage ?? ''}}" class="form-control" name="beverage" placeholder="" aria-label="" aria-describedby="basic-addon1">
                                 </div>
@@ -55,28 +62,11 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Beverage Name</label>
-                                        <select name="product_id" class="custom-select" style="width: 200px;">
+                                        <select name="product_id" class="custom-select form-control">
                                             <option value="">Select Beverage</option>
                                             @foreach ($products as $product)
                                                 <option value="{{ $product->id }}">
-                                                    {{ $product->beverage_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                
-
-                            </div>
-                        
-                            <div class="col-12 row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Category Name</label>
-                                        <select name="category_id" style="width: 200px;">
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">
-                                                    {{ $category->cat_name }}
+                                                    {{ $product->beverage_name.' ['.$product->category->cat_name.']' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -85,11 +75,12 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Quantity (Cases)</label>
-                                        <input type="number" name="quantity" style="width: 200px;">
+                                        <input type="number" name="quantity" class="form-control">
                                     </div>
-                                    <input type="hidden" name="order_number" value="{{ $request->order_number ?? '' }}">
-                                    <button type="submit" class="btn btn-primary">Add Order</button>
                                 </div>
+                                
+                                <input type="hidden" name="order_number" value="{{ $request->order_number ?? '' }}">
+                                <button type="submit" class="btn btn-primary">Add Order</button>
                             </div>
                             
                             {!! Form::close() !!}
@@ -100,7 +91,6 @@
                                         <thead>
                                             <th>Order number</th>
                                             <th>Beverages Name</th>
-                                            <th>Category</th>
                                             <th>Quantity</th>
                                             <th>Total</th>
                                             <th>Action</th>
@@ -109,8 +99,7 @@
                                             @foreach ($purchases as $purchase)
                                                 <tr>
                                                     <td>{{ $purchase->order_id }}</td>
-                                                    <td>{{ $purchase->product->beverage_name }}</td>
-                                                    <td>{{ $purchase->category->cat_name }}</td>
+                                                    <td>{{ $purchase->product->beverage_name.' ['.$product->category->cat_name.']' }}</td>
                                                     <td>{{ $purchase->quantity }}</td>
                                                     <td>{{ $purchase->total }}</td>
                                                     <td>
@@ -137,10 +126,10 @@
                             <div class="col-12">
                             <form action="/purchase" method="GET">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
-                                                <button type="submit" class="btn btn-outline-secondary">Search Customer</button>
+                                                <button type="submit" class="mb-0 btn btn-outline-secondary">Search Customer</button>
                                             </div>
                                             <input type="hidden" value="{{ $request->beverage ?? ''}}" class="form-control" name="beverage" placeholder="" aria-label="" aria-describedby="basic-addon1">
                                             <input type="hidden" name="order_number" value="{{ $request->order_number ?? '' }}">
@@ -157,7 +146,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Customer Name</label>
-                                        <select name="customer_id" style="width: 200px;">
+                                        <select name="customer_id" class="form-control">
                                             <option value="">Select Customer</option>
                                             @foreach ($customers as $customer)
                                                 <option value="{{ $customer->id }}" {{ $request->customer_id == $customer->id ? 'selected' : '' }}>
@@ -170,7 +159,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Mode of Payment</label>
-                                        <select name="mop_id" style="width: 200px;">
+                                        <select name="mop_id" class="form-control">
                                             @foreach ($m_o_p_s as $bayadform)
                                                 <option value="{{ $bayadform->id }}">
                                                     {{ $bayadform->mode }}</option>
@@ -179,33 +168,28 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Amount Due</label>
-                                            <input type="number" id="amountDue" name="amount" value="{{ $totals }}" readonly style="width: 200px;">
-                                        </div>
-                                </div>
-                                <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Discount %</label>
-                                            <input type="number" oninput="calcDiscountedAmount()" id="discount" name="discount" style="width: 200px;">
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Discount %</label>
+                                        <input type="number" oninput="calcDiscountedAmount()" id="discount" name="discount" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Discount Amount</label>
-                                            <input readonly type="number" id="discountedAmount" name="total_cash" style="width: 200px;">
+                                            <input readonly type="number" id="discountedAmount" name="total_cash" class="form-control">
                                         </div>
                                 </div>
                                 <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Cash</label>
-                                            <input type="number" oninput="calcChange()" id="cash" name="cash" style="width: 200px;">
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Cash</label>
+                                        <input type="number" oninput="calcChange()" id="cash" name="cash"  class="form-control">
+                                        <input type="hidden" id="amountDue" name="amount" value="{{ $totals }}" readonly  class="form-control">
+                                    </div>
                                 </div>
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Change</label>
-                                            <input type="text" oninput="calcChange()" id="change" name="change" style="width: 200px;">
+                                            <input type="text" oninput="calcChange()" id="change" name="change" class="form-control">
                                         </div>
                                 </div>
                                 <div class="col-12">

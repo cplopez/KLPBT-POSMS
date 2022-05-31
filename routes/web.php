@@ -14,8 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
+    // return view('welcome');
 });
+
+Route::get('/inventories/export', 'App\Http\Controllers\InventoryController@export')->name('inventory.export');
+Route::get('/deliveries/export', 'App\Http\Controllers\DeliveryController@export')->name('delivery.export');
+Route::get('/customer_sales/export', 'App\Http\Controllers\CustomerSalesController@export')->name('sales.export');
+
 Route::resource('/dashboard', 'App\Http\Controllers\DashboardController');
 #route for sales transaction monitoring
 Route::resource('/customers', 'App\Http\Controllers\CustomersController');
@@ -39,7 +45,7 @@ Route::resource('/users', 'App\Http\Controllers\UserController');
 Route::resource('/deliveries', 'App\Http\Controllers\DeliveryController');
 // Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
-Auth::routes(); 
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
@@ -49,3 +55,7 @@ Route::group(['middleware' => ['auth']], function() {
     */
     Route::get('/logout', 'App\Http\Controllers\LogoutController@perform')->name('logout.perform');
  });
+
+
+
+ Auth::routes(); 

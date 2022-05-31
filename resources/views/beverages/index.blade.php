@@ -43,11 +43,26 @@
                                     <a href="#myModal" role="button" class="btn btn-md btn-primary"
                                         data-bs-toggle="modal"><i class="fas fa-fw fa-plus"></i>Add</a>
                                         <form method="GET" action="/beverages_list">
-                                            <select id="category" name="category" class="custom-select">
-                                                @foreach ($categories as $category)
-                                                    <option value="{{ $category->cat_name }}" {{ $category->cat_name == $cat_name ? 'selected': '' }}>{{ $category->cat_name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <div class="form-inline">
+                                                        <button type="submit" class="btn btn-primary mb-2">Search</button>
+                                                        <input value="{{ $search ?? '' }}" class="form-control" placeholder="Beverage Name" type="text" name="search">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Categories</label>
+                                                        <select id="category" name="category_id" class="form-control custom-select">
+                                                            <option value="">All</option>
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}" {{ $category->id == $category_id ? 'selected': '' }}>{{ $category->cat_name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </form>
                                 </h3>
                             </div>
@@ -63,22 +78,20 @@
                                             <th colspan="2">Actions</th>
                                         </thead>
                                         <tbody>
-                                            @foreach ($products as $beverage_name => $deliveries)
-                                                @foreach($deliveries as $caregory_name => $product) 
-                                                    <tr class="text-center">
-                                                        <td>{{ $beverage_name }}</td>
-                                                        <td>{{ $caregory_name }}</td>
-                                                        <td>{{ $product['quantity'] }}</td>
-                                                        <td>{{ $product['price_case'] }}</td>
-                                                        <td class="align-middle">
-                                                            <a href="/beverages_list/{{ $product['id'] }}/edit"
-                                                                class="btn btn-primary mx-2" data-toggle="tooltip"
-                                                                data-original-title="Edit user">
-                                                                Edit
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                            @foreach ($products as  $product)
+                                                <tr class="text-center">
+                                                    <td>{{ $product->beverage_name }}</td>
+                                                    <td>{{ $product->category->cat_name ?? 'N/A' }}</td>
+                                                    <td>{{ $product->total_quantity }}</td>
+                                                    <td>{{ $product->price_case }}</td>
+                                                    <td class="align-middle">
+                                                        <a href="/beverages_list/{{ $product->id }}/edit"
+                                                            class="btn btn-primary mx-2" data-toggle="tooltip"
+                                                            data-original-title="Edit user">
+                                                            Edit
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -106,10 +119,20 @@
                 <div class="modal-body">
                     {!! Form::open(['action' => 'ProductController@store', 'method' => 'POST']) !!}
                     <div class="form-group">
+                        <label>Beverage name</label>
                         <input class="form-control" placeholder="Beverage Name" type="text" name="beverage_name" required>
                     </div>
                     <div class="form-group">
+                        <label>Price</label>
                         <input class="form-control" placeholder="Price" type="number" name="price_case" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category_id" class="form-control">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->cat_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

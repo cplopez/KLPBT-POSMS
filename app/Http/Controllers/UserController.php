@@ -40,7 +40,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         request()->validate([
-            'name'=> 'required|unique:users',
+            'name'=> 'required',
             'email' => 'required|unique:users',
             'password' => 'required'
         ]);
@@ -48,7 +48,7 @@ class UserController extends Controller
             'name' => request('name'),
             'email' => request('email'),
             'password' => request('password'),
-            'is_amin' => request('user_type'),
+            'is_admin' => request('user_type'),
             'status' => 1
         ]);
         return redirect()->back();

@@ -39,7 +39,7 @@ class BeveragesListsController extends Controller
         $deliveries = Delivery::all();
 
         //get products from delivery
-        $products = [];
+        /* $products = [];
         foreach ($deliveries as $delivery) {
             if (!isset($products[$delivery->product->beverage_name])) {
                 $products[$delivery->product->beverage_name] = [];
@@ -53,10 +53,10 @@ class BeveragesListsController extends Controller
                 ];
             }
             $products[$delivery->product->beverage_name][$delivery->category->cat_name]['quantity'] += $delivery->quantity;
-        }
+        } */
         
         return view('beverages.index')->with('suppliers', $suppliers)
-       ->with('category',$categories)->with('products', $products);
+       ->with('category',$categories)->with('deliveries', $deliveries);
 
     }
 

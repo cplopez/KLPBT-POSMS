@@ -17,9 +17,6 @@ class Product extends Model
         return $this->hasMany('App\Models\Beverage');
     }
 
-    public function category() {
-        return $this->hasMany('App\Models\Category');
-    }
     public function supplier() {
         return $this->hasMany('App\Models\Supplier');
     }
@@ -32,5 +29,9 @@ class Product extends Model
 
     public function deliveries() {
         return $this->hasMany('App\Models\Delivery');
+    }
+
+    public function category() {
+        return $this->belongsTo('App\Models\Category');
     }
 }

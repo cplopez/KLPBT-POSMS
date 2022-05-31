@@ -61,7 +61,7 @@ class PurchasesController extends Controller
         
         $this->validate($request, [
             'product_id' => 'required',
-            'category_id' => 'required',
+            // 'category_id' => 'required',
             /* 'mop_id' => 'required',
             'customer_id' => 'required', */
             'quantity' =>'required'
@@ -78,16 +78,31 @@ class PurchasesController extends Controller
         $request->merge(['order_id' => $order->id]);
 
         $product = Product::find($request->product_id);
-        $purchase = Purchase::create([
-            'order_id' => $order->id,
-            'product_id' => request('product_id'),
-            'category_id' => request('category_id'),
-            /* 'mop_id' => request('mop_id'),
-            'customer_id' => request('customer_id'), */
-            'quantity' =>request('quantity'),
-            'total' =>request('quantity') * $product->price_case,
-            // 'date_purchase' => now()
-        ]);
+        if ($product->total_quantity < request('quantity')) {
+            return back()->with('error', 'Not Enough Quantity');
+        }
+
+        $purchase = Purchase::where(['order_id' => $order->id, 'product_id' => request('product_id')])->first();
+        if ($purchase != null) {
+            $new_quantity = $purchase->quantity + request('quantity');
+            $purchase->update( [
+                // 'category_id' => request('category_id'),
+                /* 'mop_id' => request('mop_id'),
+                'customer_id' => request('customer_id'), */
+                'quantity' => $new_quantity,
+                'total' => $new_quantity * $product->price_case,
+                // 'date_purchase' => now()
+            ]);
+        } else {
+            $purchase = Purchase::create([
+                'order_id' => $order->id,
+                'product_id' => request('product_id'),
+                'quantity' =>request('quantity'),
+                'total' =>request('quantity') * $product->price_case
+            ]);
+        }
+        
+
         /* $purchases = Purchase::where(['order_id', $order->id])->get();
 
         $total =  $purchase->sum('total'); */

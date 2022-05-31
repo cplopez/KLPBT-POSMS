@@ -66,9 +66,22 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-md btn-primary">Filter</button>
-                                    <!-- <a type="button" href="#" target="_blank" class="btn btn-md btn-primary">Export</a> -->
+                                    <a type="button" href="{{route('delivery.export', [
+                                        'date_end' => $request->date_end ?? '',
+                                        'date_start' => $request->date_start ?? '',
+                                        'delivery_ids' => json_encode($delivery_ids)
+                                        ])}}" 
+                                        target="_blank" class="btn btn-md btn-primary">Export</a>
                                 </form>
-                                
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <h4>Total Deliveries: {{ $deliveries->count() }}</h4>
+                                            <h4>Total Cost: &#x20B1;{{ number_format($deliveries->sum('price'), 2) }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="table-responsive">
                                     <table id="userTable" class="table">
                                         <thead>
@@ -87,8 +100,8 @@
                                                     <td>{{ $delivery->product->beverage_name }}</td>
                                                     <td>{{ $delivery->supplier->name }}</td>
                                                     <td>{{ $delivery->quantity }}</td>
-                                                    <td>{{ $delivery->price }}</td>
-                                                    <td>{{ $delivery->category->cat_name }}</td>
+                                                    <td>&#x20B1;{{number_format($delivery->price, 2)}}</td>
+                                                    <td>{{ $delivery->product->category->cat_name ?? 'N/A' }}</td>
                                                     <td>{{ $delivery->date_expire }}</td>
                                                 </tr>
                                             @endforeach
@@ -117,13 +130,12 @@
                 <div class="modal-body">
                     {!! Form::open(['action' => 'DeliveryController@store', 'method' => 'POST']) !!}
                     <div class="form-group">
+                        <label>OR Number</label>
                         <input class="form-control" placeholder="OR number" type="text" name="or_number" required>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text">Supplier's Name</label>
-                        </div>
-                        <select name="supplier_id" class="custom-select">
+                    <div class="form-group">
+                        <label>Supplier's Name</label>
+                        <select name="supplier_id" class="custom-select form-control">
                             <option selected>Choose...</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -131,34 +143,34 @@
                         </select>
                     </div>
                     {{-- select category for beverages --}}
-                    <div class="input-group mb-3">
+                    {{-- <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text">Category</label>
                         </div>
-                        <select name="category_id" class="custom-select">
+                        <select name="category_id" class="custom-select ">
                             <option selected>Choose...</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->cat_name }}</option>
                             @endforeach
                         </select>
-                    </div> 
+                    </div> --}} 
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text">Product</label>
-                        </div>
-                        <select name="product_id" class="custom-select">
+                    <div class="form-group">
+                        <label>Product</label>
+                        <select name="product_id" class="custom-select form-control">
                             <option selected>Choose...</option>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->beverage_name }}</option>
+                                <option value="{{ $product->id }}">{{ $product->beverage_name.'['.$product->category->cat_name.']' }}</option>
                             @endforeach
                         </select>
                     </div> 
 
                     <div class="form-group">
+                        <label>Quantity</label>
                         <input class="form-control" placeholder="Quantity" type="number" name="quantity" required>
                     </div>
                     <div class="form-group">
+                        <label>Price</label>
                         <input class="form-control" placeholder="Supplier Price" name="price" required>
                     </div>
                     <div class="form-group">

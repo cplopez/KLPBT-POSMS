@@ -13,6 +13,10 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\CustomerSale;
 use App\Models\Delivery;
+use Carbon\Carbon;
+
+use App\Exports\ExlExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryController extends Controller
 {
@@ -34,7 +38,7 @@ class InventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // $getOrderRecentOrderNumber = DB::select('SELECT * FROM orders ORDER BY id DESC');
         
@@ -43,8 +47,15 @@ class InventoryController extends Controller
 
         // $orderNumber = $getOrderRecentOrderNumber[0]->order_number + 1;
 
-        $inventories = Inventory::all();
-        $all_products = Product::all();
+        
+        $categories = Category::all();
+        if ((isset($request->date_start) && $request->date_start != '') && (isset($request->date_end) && $request->date_end != '')) {
+            $date_end = new Carbon($request->date_end);
+            $inventories = Inventory::whereBetween('created_at', [$request->date_start, $date_end->addDays(1)])->get();
+        } else {
+            $inventories = Inventory::all();
+        }
+        /* $all_products = Product::all();
 
        $customer_sales = CustomerSale::all();
         $order_ids = $customer_sales->pluck('order_id');
@@ -73,9 +84,9 @@ class InventoryController extends Controller
         //remove some quantity from purchase
         foreach ($purchases as $purchase) {
             $products[$purchase->product->beverage_name][$purchase->category->cat_name]['quantity'] -= $purchase->quantity;
-        }
+        } */
         
-        return view('inventories.index')->with('inventories', $inventories)->with('products', $products)->with('categories',$categories);
+        return view('inventories.index')->with('inventories', $inventories)->with(['request' => $request, 'inventory_ids' => $inventories->pluck('id')]);
     }
 
     /**
@@ -251,5 +262,25 @@ class InventoryController extends Controller
 
         // return redirect('/customers')->with('success', 'Deleted Successfully!');
   
+    }
+
+    public function export(Request $request) {
+
+        $inventories = Inventory::whereIn('id', json_decode($request->inventory_ids))->get();
+        $results = [];
+        $results[] = ['Inventories', 'Date From', 'Date To'];
+        $results[] = [' ', ($request->date_start ?? '-'), ($request->date_end ?? '_') ];
+        $results[] = ['Beverage Name', 'Category', 'Old Quantity', 'New Quantity', 'Date'];
+        foreach ($inventories as $inventory) {
+            $results[] = [
+                $inventory->product->beverage_name,
+                $inventory->product->category->cat_name,
+                $inventory->old_quantity,
+                $inventory->new_quantity,
+                $inventory->created_at
+            ];
+        }
+
+        return Excel::download(ExlExport::new($results), "Inventrory-" . ($request->date_start ?? '-').'to'.($request->date_end ?? '_') . '.xlsx');
     }
 }

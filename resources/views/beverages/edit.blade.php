@@ -3,7 +3,12 @@
     <div class="modal-content">
         {!! Form::open(['action' => ['ProductController@update', $product->id], 'method' => 'POST']) !!}
         <div class="form-group">
-            <input class="form-control" placeholder="Quantity" name="beverage_name" value="{{ $product->beverage_name }}"  required>
+            <label>Beverage name</label>
+            <input class="form-control" placeholder="Beverage Name" name="beverage_name" value="{{ $product->beverage_name }}"  required>
+        </div> 
+        <div class="form-group">
+            <label>Price</label>
+            <input class="form-control" placeholder="Price" name="price_case" value="{{ $product->price_case }}"  required>
         </div> 
     </div> 
     <div class="modal-footer">
