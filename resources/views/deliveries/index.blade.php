@@ -89,17 +89,19 @@
                                             <th>Beverages Name</th>
                                             <th>Supplier</th>
                                             <th>Quantity</th>
+                                            <th>Quantity Left</th>
                                             <th>Price</th>
                                             <th>Category</th>
                                             <th>Expiry Date</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($deliveries as $delivery)
-                                                <tr class="{{ $delivery->date_expire < now() ? 'text-danger' : ''}}">
+                                                <tr class="{{ ($delivery->date_expire < now() && $delivery->new_quantity > 0) ? 'text-danger' : ''}}">
                                                     <td>{{ $delivery->or_number }}</td>
                                                     <td>{{ $delivery->product->beverage_name }}</td>
                                                     <td>{{ $delivery->supplier->name }}</td>
                                                     <td>{{ $delivery->quantity }}</td>
+                                                    <td>{{ $delivery->new_quantity }}</td>
                                                     <td>&#x20B1;{{number_format($delivery->price, 2)}}</td>
                                                     <td>{{ $delivery->product->category->cat_name ?? 'N/A' }}</td>
                                                     <td>{{ $delivery->date_expire }}</td>
@@ -158,7 +160,6 @@
                     <div class="form-group">
                         <label>Product</label>
                         <select name="product_id" class="custom-select form-control">
-                            <option selected>Choose...</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->beverage_name.'['.$product->category->cat_name.']' }}</option>
                             @endforeach

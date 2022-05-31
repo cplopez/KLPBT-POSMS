@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\CustomerSale;
 use App\Models\Purchase;
 use App\Models\Inventory;
+use App\Models\Delivery;
+
 use Carbon\Carbon;
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -104,8 +106,19 @@ class CustomerSalesController extends Controller
 
             $product->save();
 
-            $deliveries = Delivery::where(['product_id' => $product->id])->orderBy('date_expire', 'desc')->get();
-            
+            $deliveries = Delivery::where(['product_id' => $product->id])->where('new_quantity', '>', 0)->whereDate('date_expire', '>', now())->orderBy('date_expire', 'desc')->get();
+            $quantity_purchase = $purchase->quantity;
+            foreach ($deliveries as $delivery) {
+                if ($delivery->new_quantity < $quantity_purchase) {
+                    $quantity_purchase -= $delivery->new_quantity;
+                    $delivery->new_quantity = 0;
+                    $delivery->save();
+                } else {
+                    $delivery->new_quantity -= $quantity_purchase;
+                    $delivery->save();
+                    break;
+                }
+            }
 
             Inventory::create([
                 'order_id' => $request->order_number,

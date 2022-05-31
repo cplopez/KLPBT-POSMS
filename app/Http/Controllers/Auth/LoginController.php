@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+use App\Models\Delivery;
+use App\Models\Inventory;
+
 use Illuminate\Http\Request;
 class LoginController extends Controller
 
@@ -59,9 +62,45 @@ class LoginController extends Controller
             }
             if(auth()->user()->is_admin ==1){
             //  return redirect()->route('admin.home');
+                $exp_deliveries = Delivery::where('new_quantity', '>', 0)->whereDate('date_expire', '<=', now())->where('badorder', 0)->get();
+                foreach ($exp_deliveries as $delivery) {
+                    $product = $delivery->product;
+                    $old_quantity = $product->total_quantity;
+                    $product->total_quantity -= $delivery->new_quantity;
+                    $new_quantity = $product->total_quantity;
+                    $product->save();
+                    Inventory::create([
+                        'order_id' => 1,
+                        'old_quantity' => $old_quantity,
+                        'new_quantity' => $new_quantity,
+                        'product_id' => $product->id,
+                        'quantity' => $delivery->new_quantity,
+                        'badorder' => 1,
+                    ]);
+                    $delivery->badorder = 1;
+                    $delivery->save();
+                }
                 return redirect('dashboard');
             }else{
-                    return redirect('purchase');
+                $exp_deliveries = Delivery::where('new_quantity', '>', 0)->whereDate('date_expire', '<=', now())->where('badorder', 0)->get();
+                foreach ($exp_deliveries as $delivery) {
+                    $product = $delivery->product;
+                    $old_quantity = $product->total_quantity;
+                    $product->total_quantity -= $delivery->new_quantity;
+                    $new_quantity = $product->total_quantity;
+                    $product->save();
+                    Inventory::create([
+                        'order_id' => 1,
+                        'old_quantity' => $old_quantity,
+                        'new_quantity' => $new_quantity,
+                        'product_id' => $product->id,
+                        'quantity' => $delivery->new_quantity,
+                        'badorder' => 1,
+                    ]);
+                    $delivery->badorder = 1;
+                    $delivery->save();
+                }
+                return redirect('purchase');
             }
         }else{
                 return redirect()->route('login')->with('error','Input proper email or password.');

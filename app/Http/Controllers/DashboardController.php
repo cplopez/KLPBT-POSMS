@@ -11,6 +11,7 @@ use App\Models\Customer;
 use App\Models\MOP;
 use App\Models\CustomerSale;
 use App\Models\Payable;
+use App\Models\Delivery;
 use App\Models\User;
 class DashboardController extends Controller
 {
@@ -41,8 +42,9 @@ class DashboardController extends Controller
         $sales = CustomerSale::all();
         $payables = Payable::all();
         $users = User::all();
-        
-        return view("dashboards.dashboard")->with('suppliers', $supplier)->with('invoices', $purchased)->with('beverages', $beverages)->with('categories', $categories)->with('customers', $customers)->with('payables', $payables)->with('m_o_p_s', $m_o_p_s)->with('sales', $sales)->with('users', $users);
+        $deliveries = Delivery::all();
+
+        return view("dashboards.dashboard")->with('suppliers', $supplier)->with('invoices', $purchased)->with('beverages', $beverages)->with('categories', $categories)->with('customers', $customers)->with('payables', $payables)->with('m_o_p_s', $m_o_p_s)->with('sales', $sales)->with('users', $users)->with('deliveries', $deliveries);
     }
 
     /**

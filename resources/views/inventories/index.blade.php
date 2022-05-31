@@ -72,18 +72,20 @@
                                                                     <th>No</th>
                                                                     <th>Product Name</th>
                                                                     <th>Category Name</th>
-                                                                    <th>Old Quantity </th>
-                                                                    <th>New Quantity </th>
+                                                                    <th>Old Quantity</th>
+                                                                    <th>New Quantity</th>
+                                                                    <th>Quantity</th>
                                                                     <th>Date</th>
                                                             </thead>
                                                             <tbody>
                                                                 @foreach($inventories as $i => $inventory)
-                                                                    <tr>
+                                                                    <tr class="{{ ($inventory->badorder == 1) ? 'text-danger' : ''}}">
                                                                         <td>{{ $i + 1 }}</td>
                                                                         <td>{{ $inventory->product->beverage_name }}</td>
                                                                         <td>{{ $inventory->product->category->cat_name}}</td>
                                                                         <td>{{ $inventory->old_quantity}}</td>
                                                                         <td>{{ $inventory->new_quantity}}</td>
+                                                                        <td>{{ $inventory->quantity}}</td>
                                                                         <td>{{ $inventory->created_at}}</td>
                                                                     </tr>
                                                                 @endforeach

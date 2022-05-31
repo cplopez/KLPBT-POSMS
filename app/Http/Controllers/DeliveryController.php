@@ -89,7 +89,7 @@ class DeliveryController extends Controller
         $product->save();
 
         Inventory::create([
-            'order_id' => 0,
+            'order_id' => 1,
             'old_quantity' => $old_quantity,
             'new_quantity' => $product->total_quantity,
             'product_id' => $product->id,
