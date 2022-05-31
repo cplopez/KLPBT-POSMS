@@ -76,6 +76,7 @@ class DeliveryController extends Controller
             'supplier_id' => request('supplier_id'),
             'product_id' =>request('product_id'),
             'quantity' => request('quantity'),
+            'new_quantity' => request('quantity'),
             'price' => request('price'),
             // 'category_id' => request('category_id'),
             'date_expire' => request('date_expire')

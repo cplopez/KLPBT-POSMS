@@ -92,6 +92,7 @@ class CustomerSalesController extends Controller
             'total_quantity' => count($purchases),
         ]);
 
+        
         foreach ($purchases as $purchase) {
             $product = $purchase->product;
 
@@ -102,6 +103,9 @@ class CustomerSalesController extends Controller
             $new_quantity = $product->total_quantity;
 
             $product->save();
+
+            $deliveries = Delivery::where(['product_id' => $product->id])->orderBy('date_expire', 'desc')->get();
+            
 
             Inventory::create([
                 'order_id' => $request->order_number,

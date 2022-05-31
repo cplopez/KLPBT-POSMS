@@ -13,6 +13,7 @@ class Inventory extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+
     public function purchases() {
         return $this->hasMany('App\Models\Purchase');
     }
@@ -25,16 +26,16 @@ class Inventory extends Model
         return $this->belongsTo('App\Models\Category');
     } */
     
-    /* public function order() {
-        return $this->belongsTo('App\Models\Order');
-    }
- */
     /* public function beverage() {
         return $this->hasMany('App\Models\Beverage');
     } */
     
     public function product() {
         return $this->belongsTo('App\Models\Product');
+    }
+
+    public function order() {
+        return $this->belongsTo('App\Models\Order');
     }
    
 }

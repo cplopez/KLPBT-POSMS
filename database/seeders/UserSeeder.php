@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class UserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds. php artisan db:seed --class=UserSeeder
      *
      * @return void
      */
@@ -22,6 +22,10 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'is_admin' => 1,
             'status' => 1
+        ]);
+
+        DB::table('orders')->insert([
+            'order_number' => 1
         ]);
     }
 }

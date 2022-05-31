@@ -2,8 +2,8 @@
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand" href="/">
-      <img src="../assets/img/logo-ct.png" class="navbar-brand-img  max-height-vh-50 " alt="main_logo">
-      
+      {{-- <img src="../assets/img/logo-ct.png" class="navbar-brand-img  max-height-vh-50 " alt="main_logo"> --}}
+      <img src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t1.15752-9/281348609_384164603740310_5539576653170708696_n.png?_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeF32VDErSriuurRbdeO2l-UaCmnHsEorkhoKacewSiuSLtqZN1-WFrCvg4JIpSLdjmucboGbxB7Iz6m4ouyvM8W&_nc_ohc=WLuU44X-SkAAX-TGHbZ&tn=fp5hTjNkAOGU64kr&_nc_ht=scontent.fmnl4-1.fna&oh=03_AVLwSgvS-zWcpnASMXKGqxdRrHOvfaRs-0mtD-Av4UQF5Q&oe=62BD8765" class="navbar-brand-img  max-height-vh-50 " alt="main_logo">
     </a>
   </div>
 </div>
