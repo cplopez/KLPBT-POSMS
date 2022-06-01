@@ -78,6 +78,7 @@
                                             <thead>
 
                                                 {{-- <th>id</th> --}}
+                                                <th>Cashier Name</th>
                                                 <th>Customer Name</th>
                                                 <th>Mode of Payment</th>
                                                 <th>Amount Due</th>
@@ -94,6 +95,7 @@
                                             <tbody> 
                                                 @foreach ($customerSale as $customer_sale)
                                                     <tr class="text-center">
+                                                        <td>{{$customer_sale->user->name}}</td>
                                                         <td>{{$customer_sale->customer->name}}</td>
                                                         <td>{{$customer_sale->m_o_p->mode}}</td>
                                                         <td>&#x20B1;{{number_format($customer_sale->amount, 2)}}</td>

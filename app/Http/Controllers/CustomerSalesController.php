@@ -12,6 +12,7 @@ use App\Models\Delivery;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExlExport;
 
@@ -81,6 +82,7 @@ class CustomerSalesController extends Controller
 
         $purchases = Purchase::where(['order_id' => $request->order_number])->get();
         $customer_sales = CustomerSale::create([
+            'user_id' => Auth::user()->id,
             'customer_id' => request('customer_id'),
             'order_id' => $request->order_number,
             'm_o_p_id' => request('mop_id'),
@@ -91,7 +93,7 @@ class CustomerSalesController extends Controller
             'bankname' => 'N/A',
             'check_amount' => 0,
             'check_date' => now(),
-            'total_quantity' => count($purchases),
+            'total_quantity' => $purchases->sum('quantity'),
         ]);
 
         

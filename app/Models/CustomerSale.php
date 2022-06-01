@@ -18,4 +18,8 @@ class CustomerSale extends Model
     public function m_o_p() {
         return $this->belongsTo('App\Models\MOP');
     }
+
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
 }
