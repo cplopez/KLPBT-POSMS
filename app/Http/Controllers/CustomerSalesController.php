@@ -257,9 +257,10 @@ class CustomerSalesController extends Controller
         $results = [];
         $results[] = ['Customer Sales', 'Date From', 'Date To', 'Total Transactions', 'Grand Total Sales'];
         $results[] = [' ', ($request->date_start ?? '-'), ($request->date_end ?? '_'), $sales->count(),  $sales->sum('total_cash')];
-        $results[] = ['Customer Name', 'Mode of Payment', 'Ammount Due', 'Discount', 'Total Quantity', 'Total Cash', 'Date Sales'];
+        $results[] = ['Cashier Name', 'Customer Name', 'Mode of Payment', 'Ammount Due', 'Discount', 'Total Quantity', 'Total Cash', 'Date Sales'];
         foreach ($sales as $sale) {
             $results[] = [
+                $sale->user->name,
                 $sale->customer->name,
                 $sale->m_o_p->mode,
                 $sale->amount,
