@@ -83,9 +83,9 @@
                                                                         <td>{{ $i + 1 }}</td>
                                                                         <td>{{ $inventory->product->beverage_name }}</td>
                                                                         <td>{{ $inventory->product->category->cat_name}}</td>
-                                                                        <td>{{ $inventory->old_quantity}}</td>
-                                                                        <td>{{ $inventory->new_quantity}}</td>
-                                                                        <td>{{ $inventory->quantity}}</td>
+                                                                        <td align="right">{{ $inventory->old_quantity}}</td>
+                                                                        <td align="right">{{ $inventory->new_quantity}}</td>
+                                                                        <td align="right">{{ $inventory->quantity}}</td>
                                                                         <td>{{ $inventory->created_at}}</td>
                                                                     </tr>
                                                                 @endforeach

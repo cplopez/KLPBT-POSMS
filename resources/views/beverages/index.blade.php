@@ -82,8 +82,8 @@
                                                 <tr class="text-center">
                                                     <td>{{ $product->beverage_name }}</td>
                                                     <td>{{ $product->category->cat_name ?? 'N/A' }}</td>
-                                                    <td>{{ $product->total_quantity }}</td>
-                                                    <td>&#x20B1;{{number_format($product->price_case, 2)}}</td>
+                                                    <td align="right">{{ $product->total_quantity }}</td>
+                                                    <td align="right">&#x20B1;{{number_format($product->price_case, 2)}}</td>
                                                     <td class="align-middle">
                                                         <a href="/beverages_list/{{ $product->id }}/edit"
                                                             class="btn btn-primary mx-2" data-toggle="tooltip"

@@ -144,8 +144,8 @@
                                                 <td>{{ $delivery->product->beverage_name }}</td>
                                                 <td>{{ $delivery->supplier->name }}</td>
                                                 <td>{{ $delivery->quantity }}</td>
-                                                <td>{{ $delivery->new_quantity }}</td>
-                                                <td>&#x20B1;{{number_format($delivery->price, 2)}}</td>
+                                                <td align="right">{{ $delivery->new_quantity }}</td>
+                                                <td align="right">&#x20B1;{{number_format($delivery->price, 2)}}</td>
                                                 <td>{{ $delivery->product->category->cat_name ?? 'N/A' }}</td>
                                                 <td>{{ $delivery->date_expire }}</td>
                                             </tr>
@@ -178,10 +178,10 @@
                                             <tr class="text-center">
                                                 <td>{{$customer_sale->customer->name}}</td>
                                                 <td>{{$customer_sale->m_o_p->mode}}</td>
-                                                <td>&#x20B1;{{number_format($customer_sale->amount, 2)}}</td>
-                                                <td>{{$customer_sale->discount}}</td>
-                                                <td>{{$customer_sale->total_quantity}}</td>
-                                                <td>&#x20B1;{{ number_format($customer_sale->total_cash, 2)}}</td>
+                                                <td align="right">&#x20B1;{{number_format($customer_sale->amount, 2)}}</td>
+                                                <td align="right">{{$customer_sale->discount}}</td>
+                                                <td align="right">{{$customer_sale->total_quantity}}</td>
+                                                <td align="right">&#x20B1;{{ number_format($customer_sale->total_cash, 2)}}</td>
                                                 <td>{{$customer_sale->created_at}}</td>
                                             </tr>
                                         @endforeach
@@ -215,9 +215,9 @@
                                                 <td>{{ $i + 1 }}</td>
                                                 <td>{{ $inventory->product->beverage_name }}</td>
                                                 <td>{{ $inventory->product->category->cat_name}}</td>
-                                                <td>{{ $inventory->old_quantity}}</td>
-                                                <td>{{ $inventory->new_quantity}}</td>
-                                                <td>{{ $inventory->quantity}}</td>
+                                                <td align="right">{{ $inventory->old_quantity}}</td>
+                                                <td align="right">{{ $inventory->new_quantity}}</td>
+                                                <td align="right">{{ $inventory->quantity}}</td>
                                                 <td>{{ $inventory->created_at}}</td>
                                             </tr>
                                         @endforeach

@@ -98,14 +98,14 @@
                                                         <td>{{$customer_sale->user->name}}</td>
                                                         <td>{{$customer_sale->customer->name}}</td>
                                                         <td>{{$customer_sale->m_o_p->mode}}</td>
-                                                        <td>&#x20B1;{{number_format($customer_sale->amount, 2)}}</td>
+                                                        <td align="right">&#x20B1;{{number_format($customer_sale->amount, 2)}}</td>
                                                         <!-- <td>{{$customer_sale->check_num}}</td>
                                                         <td>{{$customer_sale->check_date}}</td>
                                                         <td>{{$customer_sale->bankname}}</td> -->
-                                                        <td>{{$customer_sale->discount}}%</td>
+                                                        <td align="right">{{$customer_sale->discount}}%</td>
                                                         <!-- <td>{{$customer_sale->check_amount}}</td> -->
-                                                        <td>{{$customer_sale->total_quantity}}</td>
-                                                        <td>&#x20B1;{{ number_format($customer_sale->total_cash, 2)}}</td>
+                                                        <td align="right">{{$customer_sale->total_quantity}}</td>
+                                                        <td align="right">&#x20B1;{{ number_format($customer_sale->total_cash, 2)}}</td>
                                                         {{-- <td class="align-middle">
                                                             <a href="/customer_sales/{{$customer_sale->id}}"
                                                                 class="btn btn-primary mx-2" data-toggle="tooltip"
