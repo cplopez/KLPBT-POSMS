@@ -106,8 +106,8 @@
                                                 <tr>
                                                     <td>{{ $purchase->order_id }}</td>
                                                     <td>{{ $purchase->product->beverage_name.' ['.$product->category->cat_name.']' }}</td>
-                                                    <td>{{ $purchase->quantity }}</td>
-                                                    <td>{{ $purchase->total }}</td>
+                                                    <td align="right">{{ $purchase->quantity }}</td>
+                                                    <td align="right">{{ number_format($purchase->total, 2) }}</td>
                                                     <td>
                                                         <form action="{{ route('purchases.destroy', [$purchase->id]) }}" method="POST">
                                                             @csrf
@@ -189,7 +189,7 @@
                                     <div class="form-group">
                                         <label>Cash</label>
                                         <input type="number" oninput="calcChange()" id="cash" name="cash"  class="form-control">
-                                        <input type="hidden" id="amountDue" name="amount" value="{{ $totals }}" readonly  class="form-control">
+                                        <input type="hidden" id="amountDue" name="amount" value="{{ number_format($totals, 2) }}" readonly  class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -249,13 +249,15 @@
             var discount = document.getElementById("discount").value;
             var amount_due = document.getElementById("amountDue").value;
             var discountedAmount = parseInt(amount_due ) * parseInt(discount) / 100;
-            document.getElementById("discountedAmount").value = amount_due - discountedAmount;
+            var discountedAmmountNumberFormat = amount_due - discountedAmount;
+            document.getElementById("discountedAmount").value = discountedAmmountNumberFormat.toFixed(2);
         }
 
         function calcChange() {
             var cash = document.getElementById("cash").value;
             var amount = document.getElementById("discountedAmount").value;
-            document.getElementById("change").value = parseInt(cash) - amount;
+            var totalAmount = parseInt(cash) - amount;
+            document.getElementById("change").value = totalAmount.toFixed(2);
         }
         var products = <?= $products ?>;
         
