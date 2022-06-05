@@ -143,7 +143,7 @@
                                                 <td>{{ $delivery->or_number }}</td>
                                                 <td>{{ $delivery->product->beverage_name }}</td>
                                                 <td>{{ $delivery->supplier->name }}</td>
-                                                <td>{{ $delivery->quantity }}</td>
+                                                <td align="right">{{ $delivery->quantity }}</td>
                                                 <td align="right">{{ $delivery->new_quantity }}</td>
                                                 <td align="right">&#x20B1;{{number_format($delivery->price, 2)}}</td>
                                                 <td>{{ $delivery->product->category->cat_name ?? 'N/A' }}</td>
