@@ -126,7 +126,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <h3>Grand Total</h3>
-                                    <h1>&#8369; {{$totals}}</h1>
+                                    <h1>&#8369; {{ number_format($totals, 2) }} </h1>
                                 </div>
                             </div>
                             <div class="col-12">
