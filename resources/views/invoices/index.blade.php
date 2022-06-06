@@ -189,7 +189,10 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Cash</label>
+                                        <div class="input-icon">
                                         <input type="number" oninput="calcChange()" id="cash" name="cash"  class="form-control">
+                                        <i>₱</i>
+                                        </div>  
                                         <input type="hidden" id="amountDue" name="amount" value="{{ $totals, 2 }}" readonly  class="form-control">
                                     </div>
                                 </div>
