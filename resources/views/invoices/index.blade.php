@@ -250,7 +250,7 @@
             var amount_due = document.getElementById("amountDue").value;
             var discountedAmount = parseInt(amount_due ) * parseInt(discount) / 100;
             var discountedAmmountNumberFormat = amount_due - discountedAmount;
-            document.getElementById("discountedAmount").value = discountedAmmountNumberFormat;
+            document.getElementById("discountedAmount").value = discountedAmmountNumberFormat.toFixed(2);
         }
 
         function calcChange() {
