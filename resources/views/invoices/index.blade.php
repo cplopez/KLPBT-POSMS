@@ -182,7 +182,7 @@
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Discount Amount</label>
-                                            <h3 readonly type="number" id="discountedAmount" name="total_cash" ><h3>
+                                            <input readonly type="number" id="discountedAmount" name="total_cash" class="form-control" min="1" max="1000000">
                                         </div>
                                 </div>
                                 <div class="col-6">
