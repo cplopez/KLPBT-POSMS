@@ -248,7 +248,7 @@
         function calcDiscountedAmount() {
             var discount = document.getElementById("discount").value;
             var amount_due = document.getElementById("amountDue").value;
-            var discountedAmount = parseInt(amount_due ) * parseInt(discount) / 100;
+            var discountedAmount = parseFloat(amount_due ) * parseInt(discount) / 100;
             var discountedAmmountNumberFormat = amount_due - discountedAmount;
             document.getElementById("discountedAmount").value = discountedAmmountNumberFormat.toFixed(2);
         }
@@ -267,5 +267,8 @@
             var product = products.find(p=>p.id == pid);
             document.getElementById("quantity_left").value = product.total_quantity;
         });
+
+       
     </script>
+    
 @endsection
