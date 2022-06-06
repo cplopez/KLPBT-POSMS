@@ -182,7 +182,8 @@
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Discount Amount</label>
-                                            <input readonly type="number" id="discountedAmount" name="total_cash" class="form-control" min="1" max="1000000">
+                                                <input readonly type="number" id="discountedAmountString" name="total_cashString" class="form-control" min="1" max="1000000" placeholder="0.00">
+                                                <input readonly type="hidden" id="discountedAmount" name="total_cash" class="form-control" min="1" max="1000000">
                                         </div>
                                 </div>
                                 <div class="col-6">
@@ -195,7 +196,8 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Change</label>
-                                        <input type="text" readonly oninput="calcChange()" id="change" name="change" class="form-control">
+                                        <input type="hidden" readonly oninput="calcChange()" id="change" name="change" class="form-control">
+                                        <input type="text" readonly oninput="calcChange()" id="changeString" name="change" class="form-control" placeholder="0.00">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -245,19 +247,26 @@
     </div>
 
     <script>
+        var discountedAmmountNumberFormat = 0;
+        var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'PHP',
+        });
         function calcDiscountedAmount() {
             var discount = document.getElementById("discount").value;
             var amount_due = document.getElementById("amountDue").value;
             var discountedAmount = parseFloat(amount_due ) * parseInt(discount) / 100;
-            var discountedAmmountNumberFormat = amount_due - discountedAmount;
+            discountedAmmountNumberFormat = amount_due - discountedAmount;
             document.getElementById("discountedAmount").value = discountedAmmountNumberFormat.toFixed(2);
+            document.getElementById("discountedAmountString").value = formatter.format(discountedAmmountNumberFormat);
         }
 
         function calcChange() {
             var cash = document.getElementById("cash").value;
-            var amount = document.getElementById("discountedAmount").value;
+            var amount = discountedAmmountNumberFormat;
             var totalAmount = parseInt(cash) - amount;
-            document.getElementById("change").value = totalAmount.toFixed(2);
+            document.getElementById("change").value = totalAmount.toFixed(0);
+            document.getElementById("changeString").value = formatter.format(totalAmount);
         }
         var products = <?= $products ?>;
         
