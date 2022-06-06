@@ -189,7 +189,7 @@
                                     <div class="form-group">
                                         <label>Cash</label>
                                         <input type="number" oninput="calcChange()" id="cash" name="cash"  class="form-control">
-                                        <input type="hidden" id="amountDue" name="amount" value="{{ number_format($totals, 2) }}" readonly  class="form-control">
+                                        <input type="hidden" id="amountDue" name="amount" value="{{ $totals, 2 }}" readonly  class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-6">
