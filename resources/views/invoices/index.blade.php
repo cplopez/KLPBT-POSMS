@@ -245,17 +245,18 @@
     </div>
 
     <script>
+        var discountedAmmountNumberFormat = 0;
         function calcDiscountedAmount() {
             var discount = document.getElementById("discount").value;
             var amount_due = document.getElementById("amountDue").value;
             var discountedAmount = parseInt(amount_due ) * parseInt(discount) / 100;
-            var discountedAmmountNumberFormat = amount_due - discountedAmount;
+            discountedAmmountNumberFormat = amount_due - discountedAmount;
             document.getElementById("discountedAmount").value = discountedAmmountNumberFormat.toFixed(2);
         }
 
         function calcChange() {
             var cash = document.getElementById("cash").value;
-            var amount = document.getElementById("discountedAmount").value;
+            var amount = discountedAmmountNumberFormat;
             var totalAmount = parseInt(cash) - amount;
             document.getElementById("change").value = totalAmount.toFixed(2);
         }
