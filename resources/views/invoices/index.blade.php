@@ -182,7 +182,7 @@
                                 <div class="col-6">
                                         <div class="form-group">
                                             <label>Discount Amount</label>
-                                                <input readonly type="number" id="discountedAmountString" name="total_cashString" class="form-control" min="1" max="1000000" placeholder="0.00">
+                                                <input readonly type="text" id="discountedAmountString" name="total_cashString" class="form-control" min="1" max="1000000" placeholder="0.00">
                                                 <input readonly type="hidden" id="discountedAmount" name="total_cash" class="form-control" min="1" max="1000000">
                                         </div>
                                 </div>
