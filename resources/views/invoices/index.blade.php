@@ -248,7 +248,7 @@
         function calcDiscountedAmount() {
             var discount = document.getElementById("discount").value;
             var amount_due = document.getElementById("amountDue").value;
-            var discountedAmount = parseInt(amount_due ) * parseInt(discount) / 100;
+            var discountedAmount = parseDouble(amount_due ) * parseInt(discount) / 100;
             var discountedAmmountNumberFormat = amount_due - discountedAmount;
             document.getElementById("discountedAmount").value = discountedAmmountNumberFormat;
         }
